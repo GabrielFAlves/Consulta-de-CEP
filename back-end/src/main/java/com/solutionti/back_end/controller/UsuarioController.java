@@ -11,38 +11,38 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    // Listar todos os usuários
     @GetMapping
     public List<Usuario> listarTodos() {
         return usuarioService.listarTodos();
     }
 
-    // Buscar usuário por ID
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
         Optional<Usuario> usuario = usuarioService.buscarPorId(id);
         return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Criar um novo usuário
     @PostMapping
-    public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> salvar(@RequestBody Usuario usuario) {
+        Optional<Usuario> usuarioExistente = usuarioService.buscarPorCpf(usuario.getCpf());
+        if (usuarioExistente.isPresent()) {
+            return ResponseEntity.status(409).body("CPF já cadastrado.");
+        }
         return ResponseEntity.ok(usuarioService.salvar(usuario));
     }
 
-    // Atualizar um usuário existente
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
         Optional<Usuario> usuario = usuarioService.atualizar(id, usuarioAtualizado);
         return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Deletar usuário por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         usuarioService.deletar(id);

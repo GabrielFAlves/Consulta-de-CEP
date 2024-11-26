@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,14 +20,14 @@ type CadastroFormData = z.infer<typeof cadastroSchema>;
 interface DialogEditProps {
   open: boolean;
   onClose: () => void;
-  user: CadastroFormData | null;
-  onSave: (data: CadastroFormData) => void;
+  user: CadastroFormData & { id: number } | null;
+  onSave: (data: CadastroFormData & { id: number }) => void;
 }
 
 const DialogEdit: React.FC<DialogEditProps> = ({ open, onClose, user, onSave }) => {
   const form = useForm<CadastroFormData>({
     resolver: zodResolver(cadastroSchema),
-    defaultValues: user || {
+    defaultValues: {
       nome: "",
       cpf: "",
       cep: "",
@@ -37,12 +38,19 @@ const DialogEdit: React.FC<DialogEditProps> = ({ open, onClose, user, onSave }) 
     },
   });
 
-  const onSubmit = (data: CadastroFormData) => {
-    onSave(data);
-    onClose();
-  };
+  useEffect(() => {
+    if (user) {
+      form.reset(user);
+    }
+  }, [user, form]);
 
-  if (!user) return null;
+  const onSubmit = (data: CadastroFormData) => {
+    if (user) {
+      const updatedData = { id: user.id, ...data };
+      onSave(updatedData);
+      onClose();
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

@@ -15,6 +15,7 @@ export const cadastroSchema = z.object({
   cidade: z.string().optional(),
   estado: z
     .string()
+    .length(2, "O estado deve ter exatamente 2 letras.")
     .toUpperCase()
     .optional(),
 });

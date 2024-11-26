@@ -14,22 +14,22 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Listar todos os usuários
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
 
-    // Buscar usuário por ID
     public Optional<Usuario> buscarPorId(Long id) {
         return usuarioRepository.findById(id);
     }
 
-    // Salvar um novo usuário
     public Usuario salvar(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
 
-    // Atualizar um usuário existente
+    public Optional<Usuario> buscarPorCpf(String cpf) {
+        return usuarioRepository.findByCpf(cpf);
+    }
+
     public Optional<Usuario> atualizar(Long id, Usuario usuarioAtualizado) {
         return usuarioRepository.findById(id).map(usuario -> {
             usuario.setNome(usuarioAtualizado.getNome());
@@ -43,7 +43,6 @@ public class UsuarioService {
         });
     }
 
-    // Deletar usuário por ID
     public void deletar(Long id) {
         usuarioRepository.deleteById(id);
     }
