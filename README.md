@@ -1,6 +1,6 @@
-# Cadastro de Usuários
+# Consulta de CEP e Gerenciamento de Endereços
 
-Este é um projeto React para o cadastro de usuários utilizando tecnologias modernas, incluindo **React Hook Form**, **React Query** e **shadcn/ui** para criar uma interface de usuário estilosa e funcional.
+Este é um teste técnico em React para o cadastro de usuários utilizando tecnologias modernas, incluindo **React Hook Form**, **React Query** e **shadcn/ui** para criar uma interface de usuário estilosa e funcional.
 
 ---
 
@@ -82,3 +82,67 @@ src/
 ├── schemas/          # Schemas de validação Zod
 ├── pages/            # Páginas principais
 └── App.tsx           # Componente principal
+```
+
+---
+
+# Passo a Passo para Rodar o Programa
+
+Siga os passos abaixo para configurar e executar o projeto localmente.
+
+---
+
+## Pré-requisitos
+
+- **Node.js** v18+.
+- **NPM** ou **Yarn**.
+- **MySQL** configurado.
+
+---
+
+## Passo 1: Configurar o Banco de Dados
+
+1. **Inicie o MySQL** e crie o banco de dados necessário:
+   ```sql
+   CREATE DATABASE solution_db;
+   ```
+
+2. **Configure o backend**:
+
+    - Edite o arquivo `application.properties` e insira as credenciais do MySQL:
+      ```properties
+      spring.datasource.url=jdbc:mysql://localhost:3306/solution_db
+      spring.datasource.username=seu_usuario
+      spring.datasource.password=sua_senha
+      ```
+
+3. **Inicie o backend com o Spring Boot**:
+
+    - Certifique-se de que o backend está rodando em [http://localhost:8080](http://localhost:8080).
+
+---
+
+### Passo 2: Configurar e Iniciar o Frontend
+
+1. **Clone o repositório do projeto**:
+   ```bash
+   git clone https://github.com/GabrielFAlves/Solution-TI.git
+   ```
+
+2. **Acesse a pasta do frontend**:
+    ```bash
+    cd Solution-TI/front-end
+    ```
+
+3. **Instale as dependências**:
+    ```bash
+    npm install
+    ```
+
+4. **Inicie o servidor de desenvolvimento**:
+    ```bash
+    npm run dev
+    ```
+  
+5. **Acesse o aplicativo no navegador**:
+  - Abra http://localhost:5173 para visualizar a aplicação.
