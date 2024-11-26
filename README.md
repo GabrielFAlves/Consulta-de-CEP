@@ -126,12 +126,12 @@ Siga os passos abaixo para configurar e executar o projeto localmente.
 
 1. **Clone o repositório do projeto**:
    ```bash
-   git clone https://github.com/GabrielFAlves/Solution-TI.git
+   https://github.com/GabrielFAlves/Consulta-de-CEP.git
    ```
 
 2. **Acesse a pasta do frontend**:
     ```bash
-    cd Solution-TI/front-end
+    cd Consulta-de-CEP/front-end
     ```
 
 3. **Instale as dependências**:
