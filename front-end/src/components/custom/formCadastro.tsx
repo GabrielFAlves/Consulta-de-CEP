@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import InputMask from "react-input-mask";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
@@ -13,6 +12,20 @@ import { useEffect, useState } from "react";
 import AlertUsuarioCriado from "./alertUsuarioCriado";
 
 type CadastroFormData = z.infer<typeof cadastroSchema>;
+
+const formatarCPF = (cpf: string): string => {
+  // Remove todos os caracteres não numéricos
+  cpf = cpf.replace(/\D/g, "");
+  
+  // Aplica a formatação de CPF: 999.999.999-99
+  if (cpf.length <= 11) {
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  }
+
+  return cpf;
+};
 
 const FormCadastro = () => {
   const [alertVisible, setAlertVisible] = useState(false);
@@ -100,14 +113,14 @@ const FormCadastro = () => {
                   <FormItem>
                     <FormLabel>CPF</FormLabel>
                     <FormControl>
-                      <InputMask
+                      <Input
                         placeholder="Digite seu CPF"
-                        mask="999.999.999-99"
                         value={field.value}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      >
-                        {(inputProps) => <Input {...inputProps} />}
-                      </InputMask>
+                        onChange={(e) => {
+                          const formattedValue = formatarCPF(e.target.value);
+                          field.onChange(formattedValue); // Atualiza o valor formatado no form
+                        }}
+                      />
                     </FormControl>
                     {form.formState.errors.cpf && (
                       <p className="text-red-500">{form.formState.errors.cpf.message}</p>
