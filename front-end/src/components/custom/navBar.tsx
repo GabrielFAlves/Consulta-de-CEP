@@ -6,10 +6,20 @@ import {
   NavigationMenuList,
 } from "../ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 const NavBar = () => {
+  const [theme, setTheme] = useState("light"); // Estado para controlar o tema
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+  };
+
   return (
-    <NavigationMenu className="p-2">
+    <NavigationMenu className="p-2 flex justify-between gap-4 items-center">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
@@ -39,6 +49,12 @@ const NavBar = () => {
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
+
+      <Button
+        onClick={toggleTheme}
+      >
+        {theme === "light" ? "Modo Escuro" : "Modo Claro"}
+      </Button>
     </NavigationMenu>
   );
 };

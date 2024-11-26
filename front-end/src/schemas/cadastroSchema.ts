@@ -33,8 +33,6 @@ export const cadastroSchema = z.object({
   nome: z.string().min(3, "O nome deve ter no mínimo 3 caracteres."),
   cpf: z
     .string()
-    .length(11, "O CPF deve ter exatamente 11 dígitos.")
-    .regex(/^\d+$/, "O CPF deve conter apenas números.")
     .refine(validarCPF, { message: "CPF inválido." }),
   cep: z
     .string()

@@ -80,7 +80,7 @@ const TableUsers = () => {
 
         <TableBody>
           {users?.map((user: User) => (
-            <TableRow key={user.id} className="odd:bg-gray-100 even:bg-white">
+            <TableRow key={user.id}>
               <TableCell>{user.nome}</TableCell>
               <TableCell className="hidden sm:table-cell">{user.cpf}</TableCell>
               <TableCell>{user.cep}</TableCell>
