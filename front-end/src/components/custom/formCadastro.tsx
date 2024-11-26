@@ -7,7 +7,8 @@ import { cadastroSchema } from "../../schemas/cadastroSchema";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import useCriarUsuario from "@/api/hooks/useCriarUsuario";
-import { useState } from "react";
+import useViaCep from "@/api/hooks/useViaCep";
+import { useEffect } from "react";
 
 type CadastroFormData = z.infer<typeof cadastroSchema>;
 
@@ -25,12 +26,21 @@ const FormCadastro = () => {
     },
   });
 
-  const [cpfError, setCpfError] = useState<string | null>(null);
+  const cep = form.watch("cep"); // Observa o valor do campo CEP
+  const { data, error } = useViaCep(cep || ""); // Chama o hook passando o CEP observado
 
-  const { mutate: criarUsuario } = useCriarUsuario();
+  const { mutate: criarUsuario, isError } = useCriarUsuario();
+
+  useEffect(() => {
+    if (data) {
+      form.setValue("logradouro", data.logradouro || "");
+      form.setValue("bairro", data.bairro || "");
+      form.setValue("cidade", data.localidade || "");
+      form.setValue("estado", data.uf || "");
+    }
+  }, [data, form]);
 
   const onSubmit = (data: CadastroFormData) => {
-    setCpfError(null); // Limpa o erro antes de tentar enviar
     criarUsuario(data, {
       onSuccess: () => {
         console.log("Usuário criado com sucesso!");
@@ -38,7 +48,7 @@ const FormCadastro = () => {
       },
       onError: (error: any) => {
         if (error.response?.status === 409) {
-          setCpfError("CPF já cadastrado.");
+          form.setError("cpf", { message: "CPF já cadastrado." });
         } else {
           console.error("Erro ao criar usuário:", error);
         }
@@ -83,7 +93,6 @@ const FormCadastro = () => {
                   {form.formState.errors.cpf && (
                     <p className="text-red-500">{form.formState.errors.cpf.message}</p>
                   )}
-                  {cpfError && <p className="text-red-500">{cpfError}</p>}
                 </FormItem>
               )}
             />
@@ -99,6 +108,7 @@ const FormCadastro = () => {
                   {form.formState.errors.cep && (
                     <p className="text-red-500">{form.formState.errors.cep.message}</p>
                   )}
+                  {error && <p className="text-red-500">Erro ao buscar o CEP.</p>}
                 </FormItem>
               )}
             />
@@ -109,7 +119,7 @@ const FormCadastro = () => {
                 <FormItem>
                   <FormLabel>Logradouro</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite seu Logradouro" {...field} />
+                    <Input placeholder="Preenchido automaticamente" readOnly {...field} />
                   </FormControl>
                   {form.formState.errors.logradouro && (
                     <p className="text-red-500">{form.formState.errors.logradouro.message}</p>
@@ -124,7 +134,7 @@ const FormCadastro = () => {
                 <FormItem>
                   <FormLabel>Bairro</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite seu Bairro" {...field} />
+                    <Input placeholder="Preenchido automaticamente" readOnly {...field} />
                   </FormControl>
                   {form.formState.errors.bairro && (
                     <p className="text-red-500">{form.formState.errors.bairro.message}</p>
@@ -139,7 +149,7 @@ const FormCadastro = () => {
                 <FormItem>
                   <FormLabel>Cidade</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite sua Cidade" {...field} />
+                    <Input placeholder="Preenchido automaticamente" readOnly {...field} />
                   </FormControl>
                   {form.formState.errors.cidade && (
                     <p className="text-red-500">{form.formState.errors.cidade.message}</p>
@@ -154,7 +164,7 @@ const FormCadastro = () => {
                 <FormItem>
                   <FormLabel>Estado</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite seu Estado" {...field} />
+                    <Input placeholder="Preenchido automaticamente" readOnly {...field} />
                   </FormControl>
                   {form.formState.errors.estado && (
                     <p className="text-red-500">{form.formState.errors.estado.message}</p>
@@ -170,7 +180,9 @@ const FormCadastro = () => {
         </Form>
       </CardContent>
 
-      <CardFooter />
+      <CardFooter>
+        {isError && <p className="text-red-500">Erro ao enviar os dados. Tente novamente.</p>}
+      </CardFooter>
     </Card>
   );
 };
